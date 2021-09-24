@@ -1,0 +1,31 @@
+.flight-info {
+  padding: 1rem;
+  font-size: 0.8rem;
+}
+
+.flight-header {
+  background-color: rgb(97, 154, 219);
+  width: 100%;
+  height: 2rem;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.3rem;
+}
+
+.btn-choose {
+  width: 100%;
+  background-color: rgb(245, 169, 107);
+  color: white;
+  border: rgb(245, 169, 107);
+  height: 1.8rem;
+}
+
+.price-details {
+  font-size: 0.5rem;
+}
+
+.price {
+  text-align: end;
+  font-size: 1rem;
+}

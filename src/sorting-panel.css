@@ -1,0 +1,13 @@
+.sorting-panel {
+  display: flex;
+  margin-left: 1.5rem;
+  font-size: 0.8rem;
+}
+
+input {
+  margin: 0.25rem;
+}
+
+p {
+  font-weight: bold;
+}

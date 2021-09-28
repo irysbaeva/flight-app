@@ -61,7 +61,7 @@ const SortingPanel = ({ airCompanies, data, setData, resetData }) => {
       );
     }
     setData(filtredData);
-  }, [state, state.filtredData]);
+  }, [state]);
 
   return (
     <div className="sorting">

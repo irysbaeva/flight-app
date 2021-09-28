@@ -1,53 +1,73 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./sorting-panel.css";
 
 const SortingPanel = ({ airCompanies, data, setData, resetData }) => {
-  const sortByCheapestPrice = () => {
-    data.sort(
-      (a, b) => a.flight.price.total.amount - b.flight.price.total.amount
-    );
-    setData(data);
-  };
+  const [state, setState] = useState({
+    filtredData: data,
+    sorting: "",
+    stops: "all",
+    priceStart: "",
+    priceEnd: "",
+  });
 
-  const sortByExpensivePrice = () => {
-    data.sort(
-      (a, b) => b.flight.price.total.amount - a.flight.price.total.amount
-    );
-    setData(data);
+  const handleChange = ({ target: { name, value } }) => {
+    setState((prev) => ({ ...prev, [name]: value }));
   };
-
-  const sortByDuration = () => {
-    data.sort(
-      (a, b) =>
-        a.flight.legs[0].duration +
-        a.flight.legs[1].duration -
-        (b.flight.legs[0].duration + b.flight.legs[1].duration)
-    );
-    setData(data);
-  };
-
-  const filterByStops = (value) => {
-    if (value === "stop") {
-      data = data.filter(
-        (el) =>
-          el.flight.legs[0].segments.length === 2 &&
-          el.flight.legs[1].segments.length === 2
-      );
-    } else if (value === "direct") {
-      data = data.filter(
+  useEffect(() => {
+    let filtredData = [...state.filtredData];
+    if (state.stops && state.stops === "direct") {
+      filtredData = filtredData.filter(
         (el) =>
           el.flight.legs[0].segments.length === 1 &&
           el.flight.legs[1].segments.length === 1
       );
     }
-    setData(data);
-  };
+    if (state.stops && state.stops === "stop") {
+      filtredData = filtredData.filter(
+        (el) =>
+          el.flight.legs[0].segments.length === 2 &&
+          el.flight.legs[1].segments.length === 2
+      );
+    }
+    if (state.sorting === "cheapest") {
+      filtredData.sort(
+        (a, b) => a.flight.price.total.amount - b.flight.price.total.amount
+      );
+    }
+    if (state.sorting === "expensive") {
+      filtredData.sort(
+        (a, b) => b.flight.price.total.amount - a.flight.price.total.amount
+      );
+    }
+    if (state.sorting === "duration") {
+   
+      filtredData.sort(
+        (a, b) =>
+          a.flight.legs[0].duration +
+          a.flight.legs[1].duration -
+          (b.flight.legs[0].duration + b.flight.legs[1].duration)
+      );
+    }
+    if (state.priceStart) {
+
+      filtredData = filtredData.filter(
+        (el) => el.flight.price.total.amount >= Number(state.priceStart)
+      );
+    }
+    if (state.priceEnd) {
+     
+      filtredData = filtredData.filter(
+        (el) => el.flight.price.total.amount <= Number(state.priceEnd)
+      );
+    }
+    setData(filtredData);
+  }, [state, state.filtredData]);
 
   return (
     <div className="sorting">
       <p>Сортировать</p>
       <input
-        onChange={sortByCheapestPrice}
+        onChange={handleChange}
         type="radio"
         id="cheapest"
         name="sorting"
@@ -56,7 +76,7 @@ const SortingPanel = ({ airCompanies, data, setData, resetData }) => {
       <label htmlFor="cheapest">по возрастанию цены</label>
       <br />
       <input
-        onChange={sortByExpensivePrice}
+        onChange={handleChange}
         type="radio"
         id="expensive"
         name="sorting"
@@ -65,7 +85,7 @@ const SortingPanel = ({ airCompanies, data, setData, resetData }) => {
       <label htmlFor="expensive">по убыванию цены</label>
       <br />
       <input
-        onChange={sortByDuration}
+        onChange={handleChange}
         type="radio"
         id="duration"
         name="sorting"
@@ -74,24 +94,48 @@ const SortingPanel = ({ airCompanies, data, setData, resetData }) => {
       <label htmlFor="duration">по времени в пути</label>
       <p>Фильтровать</p>
       <input
-        onChange={(e) => filterByStops(e.target.value)}
-        type="checkbox"
+        onChange={handleChange}
+        type="radio"
+        id="all"
+        name="stops"
+        value="all"
+      />
+      <label htmlFor="stop">Все</label> <br />
+      <input
+        onChange={handleChange}
+        type="radio"
         id="stop"
+        name="stops"
         value="stop"
       />
       <label htmlFor="stop">1 пересадка</label> <br />
       <input
-        onChange={(e) => filterByStops(e.target.value)}
-        type="checkbox"
+        onChange={handleChange}
+        type="radio"
         id="direct"
+        name="stops"
         value="direct"
       />
       <label htmlFor="direct">без пересадок</label>
       <br />
       <p>Цена</p>
-      От <input />
+      От{" "}
+      <input
+        type="number"
+        placeholder="от"
+        value={state.priceStart}
+        name="priceStart"
+        onChange={handleChange}
+      />
       <br />
-      До <input />
+      До{" "}
+      <input
+        type="number"
+        placeholder="до"
+        value={state.priceEnd}
+        name="priceEnd"
+        onChange={handleChange}
+      />
       <br />
       <p>Авиакомпании</p>
       {airCompanies.map((el) => {

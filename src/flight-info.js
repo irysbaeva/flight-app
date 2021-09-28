@@ -11,7 +11,7 @@ const FlightInfo = ({ el }) => {
   const stops = outbandSegments.length === 2 ? "1 пересадка" : "прямой";
   const stops2 = inboundSegments.length === 2 ? "1 пересадка" : "прямой";
   return (
-    <div className="flight-info" key={el.flightToken}>
+    <div className="flight-info">
       <p className="flight-header">
         <span> {el.flight.carrier.caption} </span>
         <span className="price">

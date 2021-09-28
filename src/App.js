@@ -18,7 +18,7 @@ const App = () => {
 
   const cheapestPrice = (airCompany) => {
     const prices = [];
-    flights
+    data
       .filter((el) => el.flight.carrier.caption === airCompany)
       .map((el) => prices.push(el.flight.price.total.amount));
     return Math.min(...prices);
@@ -36,6 +36,7 @@ const App = () => {
   useEffect(() => {
     setViewData(data.slice(0, num));
   }, [data, num]);
+
   useEffect(() => {
     setNum(2);
   }, [data]);
@@ -46,16 +47,26 @@ const App = () => {
         <SortingPanel
           airCompanies={airCompanies}
           data={data}
-          resetData={()=>setData(flights)}
+          resetData={() => setData(flights)}
           setData={setData}
           num={num}
         />
       </div>
       <div className="search-results">
-        <span> {viewData && viewData.map((el) => <FlightInfo el={el} />)}</span>
-        <button className="btn-show-results" onClick={showFlights}>
-          Показать еще
-        </button>
+        {viewData?.length > 0 ? (
+          <span>
+            <span>
+              {viewData.map((el) => (
+                <FlightInfo key={el.flightToken} el={el} />
+              ))}
+            </span>
+            <button className="btn-show-results" onClick={showFlights}>
+              Показать еще
+            </button>
+          </span>
+        ) : (
+          "Нет подходящих вариантов"
+        )}
       </div>
     </div>
   );
